@@ -30,7 +30,7 @@ endif
 
 # make all
 # reinstall the library after each recompilation
-all: $(LIBNAME)
+all: $(LIBNAME) RF24.go
 
 # Make the library
 $(LIBNAME): $(OBJECTS)
@@ -65,12 +65,13 @@ cleanconfig:
 clean:
 	@echo "[Cleaning]"
 	rm -rf *.o $(LIBNAME)
+	rm RF24.go RF24_wrap.cxx
 
 $(CONFIG_FILE):
 	@echo "[Running configure]"
 	@./configure --no-clean
 
-install: all install-libs install-headers
+install: all install-libs install-headers install-go
 upload: all upload-libs upload-headers
 
 # Install the library to LIBPATH
@@ -124,3 +125,10 @@ endif
 	@ssh -q -t -p $(REMOTE_PORT) $(REMOTE) "sudo install -m 0644 /tmp/RF24/$(DRIVER_DIR)/*.h $(REMOTE_HEADER_DIR)/$(DRIVER_DIR)"
 	@ssh -q -t -p $(REMOTE_PORT) $(REMOTE) "sudo install -m 0644 /tmp/RF24/$(ARCH_DIR)/*.h $(REMOTE_HEADER_DIR)/$(ARCH_DIR)"
 	@ssh -q -t -p $(REMOTE_PORT) $(REMOTE) "rm -rf /tmp/RF24"
+
+RF24.go:
+	swig -go -cgo -c++ -intgosize 32 RF24.i
+	go build
+
+install-go:
+	go install
