@@ -126,7 +126,7 @@ endif
 	@ssh -q -t -p $(REMOTE_PORT) $(REMOTE) "sudo install -m 0644 /tmp/RF24/$(ARCH_DIR)/*.h $(REMOTE_HEADER_DIR)/$(ARCH_DIR)"
 	@ssh -q -t -p $(REMOTE_PORT) $(REMOTE) "rm -rf /tmp/RF24"
 
-RF24.go:
+RF24.go: RF24.i build.go interrupt_wrap.cxx interrupt_wrap.h
 	swig -go -cgo -c++ -intgosize 32 RF24.i
 	go build
 

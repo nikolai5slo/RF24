@@ -19,6 +19,9 @@
    $2 = $input.len;
 }
 
+%ignore attachInterrupt;
+
 %include "stdint.i"
 
 %include "RF24.h"
+%include "utility/RPi/interrupt.h"
